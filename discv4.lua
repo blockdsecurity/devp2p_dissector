@@ -5,9 +5,9 @@
 -- @version 0.1
 --
 -- create a new dissector
-local NAME = "devp2p"
+local NAME = "discv4"
 local PORT = 30303
-local devp2p = Proto(NAME, "Ethereum devp2p Protocol")
+local discv4 = Proto(NAME, "Ethereum discv4 Protocol")
 
 local types = {
     [1] = "PING",
@@ -16,8 +16,8 @@ local types = {
     [4] = "Neighbors"
 }
 
--- create fields of devp2p
-local fields = devp2p.fields
+-- create fields of discv4
+local fields = discv4.fields
 fields.hash = ProtoField.bytes(NAME .. ".hash", "Hash")
 fields.sign = ProtoField.bytes(NAME .. ".sign", "Sign")
 fields.type = ProtoField.uint8(NAME .. ".type", "Type", base.DEC, types)
@@ -432,12 +432,12 @@ end
 ----------------------------------------
 
 -- dissect packet
-function devp2p.dissector(tvb, pinfo, tree)
-    local subtree = tree:add(devp2p, tvb())
+function discv4.dissector(tvb, pinfo, tree)
+    local subtree = tree:add(discv4, tvb())
     local offset = 0
 
     -- show protocol name in protocol column
-    pinfo.cols.protocol = devp2p.name
+    pinfo.cols.protocol = discv4.name
 
     -- dissect field one by one, and add to protocol tree
     local hash = tvb(offset, 32)
@@ -522,4 +522,4 @@ function devp2p.dissector(tvb, pinfo, tree)
 end
 
 -- register this dissector
-DissectorTable.get("udp.port"):add(PORT, devp2p)
+DissectorTable.get("udp.port"):add(PORT, discv4)
